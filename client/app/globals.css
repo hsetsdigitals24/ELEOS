@@ -1,0 +1,312 @@
+/*
+  app/globals.css  (Tailwind v4 CSS-first config — no tailwind.config.js needed)
+
+  Import this in app/layout.tsx once: `import "./globals.css";`
+
+  Color/type/spacing values below map to ELEOS-DESIGN.md. Brand red CONFIRMED
+  as #e3221c (anchored at brand-600). The surrounding steps (50–950) are a
+  hand-interpolated ramp toward white/black from that exact value — good
+  enough to build with, but run it through a proper scale generator (Tailwind's
+  palette generator or uicolors.app) for perceptually even lightness steps
+  before this ships to production.
+*/
+
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+  /* ---------------------------------------------------------------- */
+  /* COLORS                                                            */
+  /* ---------------------------------------------------------------- */
+
+  /* Brand red scale — bg-brand-500, text-brand-700, border-brand-200, etc. */
+  --color-brand-50:  #fdece9;
+  --color-brand-100: #fad3cc;
+  --color-brand-200: #f4a99d;
+  --color-brand-300: #ec7a69;
+  --color-brand-400: #e2543f;
+  --color-brand-500: #e23a25;
+  --color-brand-600: #e3221c;  /* <- CONFIRMED brand red */
+  --color-brand-700: #b91d17;
+  --color-brand-800: #8f1712;
+  --color-brand-900: #63100d;
+  --color-brand-950: #3d0a08;
+
+  /* Semantic aliases so components read intent, not a raw shade number */
+  --color-brand-primary:   var(--color-brand-600);
+  --color-brand-hover:     var(--color-brand-800);
+  --color-brand-tint:      var(--color-brand-50);
+  /* Use for red text/accents sitting ON TOP of ink-900 dark sections —
+     brand-600 only clears ~3.6:1 contrast on near-black, fine for icons/large
+     headings but not safe for small body text. brand-400 clears comfortably. */
+  --color-brand-on-dark:   var(--color-brand-400);
+
+  /* Near-black + warm off-white — NOT pure #000 / #fff */
+  --color-ink-950: #0d0d0d;
+  --color-ink-900: #141414;   /* brand-black, used for dark section backgrounds */
+  --color-ink-700: #2b2b2b;
+  --color-ink-500: #5c5c5c;
+
+  --color-cream-50:  #fdfcfa;
+  --color-cream-100: #f7f4ef; /* brand-cream, the warm off-white base background */
+  --color-cream-200: #efe9df;
+
+  /* ---------------------------------------------------------------- */
+  /* TYPOGRAPHY                                                        */
+  /* ---------------------------------------------------------------- */
+
+  /* These reference CSS variables produced by next/font/google in layout.tsx
+     (see snippet below) — don't hardcode font names here directly, since
+     next/font needs to own the @font-face + preloading. */
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans:    var(--font-work-sans), system-ui, sans-serif;
+
+  /* ---------------------------------------------------------------- */
+  /* SPACING — named section-rhythm tokens, additive to Tailwind's     */
+  /* default numeric scale (does not replace p-4, gap-8, etc.)         */
+  /* ---------------------------------------------------------------- */
+  --spacing-section-sm: 2rem;    /* 32px  — tight internal gaps */
+  --spacing-section-md: 6rem;    /* 96px  — standard section padding */
+  --spacing-section-lg: 10rem;   /* 160px — major chapter-break sections */
+  --spacing-section-xl: 15rem;   /* 240px — full storytelling pauses */
+
+  /* ---------------------------------------------------------------- */
+  /* RADIUS — deliberately restrained, editorial not "soft SaaS"       */
+  /* ---------------------------------------------------------------- */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  /* ---------------------------------------------------------------- */
+  /* EASING — for CSS transitions outside of GSAP (hover states, etc.) */
+  /* ---------------------------------------------------------------- */
+  --ease-story: cubic-bezier(0.22, 1, 0.36, 1); /* smooth, confident settle */
+}
+
+/* Smooth scrolling for native anchor jumps (the floating SectionNav uses
+   GSAP ScrollToPlugin; this covers everything else). Disabled for users
+   who prefer reduced motion. */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Equalizer bars on the audio broadcast's "off air" panel. */
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+/* Cart badge landing pop — the navbar half of the fly-to-cart moment.
+   Applied by CartBadge when the item count grows. */
+@keyframes cart-badge-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.55);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.cart-badge-pop {
+  animation: cart-badge-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart-badge-pop {
+    animation: none;
+  }
+}
+/* ------------------------------------------------------------------ */
+/* Rich-text editor (admin) + article body rendering — the Tiptap      */
+/* editing surface and the published article HTML share one typographic */
+/* system so what the admin writes is what the reader sees.            */
+/* ------------------------------------------------------------------ */
+
+.rte-content p {
+  margin: 0 0 0.75rem;
+  line-height: 1.75;
+}
+
+.rte-content h2,
+.rte-content h3,
+.rte-content h4 {
+  font-family: var(--font-fraunces), serif;
+  color: var(--color-ink-900);
+  line-height: 1.2;
+  margin: 1.5rem 0 0.6rem;
+}
+
+.rte-content h2 {
+  font-size: 1.6rem;
+}
+
+.rte-content h3 {
+  font-size: 1.3rem;
+}
+
+.rte-content h4 {
+  font-size: 1.1rem;
+}
+
+.rte-content ul,
+.rte-content ol {
+  padding-left: 1.4rem;
+  margin: 0 0 0.75rem;
+  line-height: 1.75;
+}
+
+.rte-content ul {
+  list-style: disc;
+}
+
+.rte-content ol {
+  list-style: decimal;
+}
+
+.rte-content li {
+  margin-bottom: 0.3rem;
+}
+
+.rte-content blockquote {
+  margin: 1.75rem 0;
+  padding: 0.5rem 0 0.5rem 1.25rem;
+  border-left: 4px solid var(--color-brand-600);
+  font-family: var(--font-fraunces), serif;
+  font-size: 1.4rem;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--color-ink-900);
+}
+
+.rte-content a {
+  color: var(--color-brand-600);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.rte-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 1rem 0;
+}
+
+.rte-content hr {
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--color-ink-900) 15%, transparent);
+  margin: 1.75rem 0;
+}
+
+.rte-content pre {
+  background: var(--color-ink-900);
+  color: var(--color-cream-100);
+  border-radius: 4px;
+  padding: 0.9rem 1.1rem;
+  font-family: ui-monospace, "Courier New", monospace;
+  font-size: 0.85rem;
+  overflow-x: auto;
+  margin: 0 0 0.75rem;
+}
+
+.rte-content code {
+  font-family: ui-monospace, "Courier New", monospace;
+  font-size: 0.85em;
+}
+
+.rte-content p code {
+  background: color-mix(in srgb, var(--color-ink-900) 7%, transparent);
+  border-radius: 2px;
+  padding: 0.1rem 0.3rem;
+}
+
+/* Placeholder inside the empty editor. */
+.rte-content p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: color-mix(in srgb, var(--color-ink-900) 35%, transparent);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* The published article body — larger reading size on the public page. */
+.article-html {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: var(--color-ink-700);
+}
+
+.article-html p {
+  margin: 0 0 1.4rem;
+}
+
+.article-html h2,
+.article-html h3,
+.article-html h4 {
+  color: var(--color-ink-900);
+  margin: 2.5rem 0 0.9rem;
+}
+
+.article-html h2 {
+  font-size: 1.9rem;
+}
+
+.article-html h3 {
+  font-size: 1.55rem;
+}
+
+.article-html blockquote {
+  font-size: 1.75rem;
+  margin: 3rem 0;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.article-html ul,
+.article-html ol {
+  margin: 0 0 1.4rem;
+  line-height: 1.85;
+}
+
+.article-html li {
+  margin-bottom: 0.45rem;
+}
+
+.article-html li strong {
+  color: var(--color-ink-900);
+}
+
+.article-html ul {
+  list-style: none;
+  padding-left: 0.25rem;
+}
+
+.article-html ul li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+
+.article-html ul li::before {
+  content: "›";
+  position: absolute;
+  left: 0;
+  color: var(--color-brand-600);
+  font-weight: 700;
+}
+
+.article-html ol {
+  padding-left: 1.5rem;
+}
