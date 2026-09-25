@@ -144,12 +144,10 @@ function AudioBroadcast() {
       <PageHero
         id="audio-hero"
         title="Live Audio Broadcast"
-        subtitle="Tune in as ELEOS goes on air — seminars, healthy living conversations and the voices behind our research, streamed straight to you."
         breadcrumb="Live Audio Broadcast"
       >
         <LiveBadge isLive={audio?.isLive ?? false} liveLabel="On air now" />
       </PageHero>
-      <div aria-hidden="true" className="border-t-4 border-brand-primary border-b border-ink-900 h-2 bg-cream-100" />
 
       {/* ── The studio ─────────────────────────────────────────── */}
       <div className="bg-cream-50 py-16 md:py-20 px-6 relative overflow-hidden">
